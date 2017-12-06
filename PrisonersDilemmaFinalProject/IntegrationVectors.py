@@ -37,9 +37,9 @@ stratsSize=6
 
 data=np.zeros((stratsSize,numberOfTimeSteps))
 
-simulationRuns=500
+simulationRuns=30
 degreeDistributionData=np.zeros((simulationRuns, populationSize))
-clusteringCoefData=np.zeros((500, populationSize+1))
+clusteringCoefData=np.zeros((simulationRuns, populationSize+1))
 
 Pb=1      #this doesn't really matter rn but it's important to have bc i might end up testing lowered Pb's
 Pn=.85
@@ -114,7 +114,6 @@ def initSim():
         guy=Individual("rand", 0, i)
         guy.clearMoves()
         population.append(guy)    
-        
     rands=np.random.rand(populationSize, populationSize)
     arrPr=np.full((populationSize, populationSize), Pr)
     relationships= rands < arrPr # JVC: easier to read
@@ -178,8 +177,11 @@ def playGame(ind1, ind2):
 def whoDies():
     payoffs=[population[i].payoff for i in range(populationSize)]
     payoffs=np.asarray(payoffs)
+    print(payoffs)
     possibleDeaths=(np.where(payoffs==payoffs.min()))
+    print(possibleDeaths)
     min=np.random.choice(possibleDeaths[0], 1)
+    print(min)
     return min  
       
 def whoReproduces():      
@@ -223,6 +225,8 @@ def selection():
     relationships[:,death]=relationships[death]
 
     population[death]=offspring
+    for i in range(populationSize):
+        population[i].payoff=0
     
 
 def mutation():
