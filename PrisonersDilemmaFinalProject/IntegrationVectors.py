@@ -19,8 +19,8 @@ import igraph
 from igraph import Graph
 from scipy import stats
 
-c=1
-b=4
+c=0
+b=0
 
 startTime=time.time()
 
@@ -177,11 +177,8 @@ def playGame(ind1, ind2):
 def whoDies():
     payoffs=[population[i].payoff for i in range(populationSize)]
     payoffs=np.asarray(payoffs)
-    print(payoffs)
     possibleDeaths=(np.where(payoffs==payoffs.min()))
-    print(possibleDeaths)
     min=np.random.choice(possibleDeaths[0], 1)
-    print(min)
     return min  
       
 def whoReproduces():      
@@ -263,10 +260,12 @@ for k in range(simulationRuns):
     clusco=np.zeros(populationSize+1)
     
     g=igraph.Graph().Adjacency(relationships.tolist(), mode=1)
+    
     if(random.random()<.1):
         igraph.plot(g)
-    howManyConnections=g.degree(list(range(populationSize)), mode=3, loops=True)
-    localCoefs=g.transitivity_local_undirected(list(range(populationSize)), mode="zero")#raw local clustering coefficient for each individual
+        
+    howManyConnections=g.degree(np.arange(populationSize), mode=3, loops=True)
+    localCoefs=g.transitivity_local_undirected(np.arange(populationSize), mode="zero")#raw local clustering coefficient for each individual
     
     for i in range(populationSize):
         degreeDistribution[howManyConnections[i]]+=1 #counting how many ppl have a certain number of connections
